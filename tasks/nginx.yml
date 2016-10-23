@@ -1,0 +1,30 @@
+- name: 'install nginx'
+  pkgng:
+    name: nginx
+    state: present
+
+- name: 'create nginx sites-enabled directory'
+  file:
+    path: /usr/local/etc/nginx/sites-enabled
+    owner: root
+    group: wheel
+    mode: 0755
+    state: directory
+
+- name: 'copy nginx config'
+  template:
+    owner: root
+    group: wheel
+    mode: 0644
+    src: templates/nginx.conf.j2
+    dest: /usr/local/etc/nginx/nginx.conf
+  notify: 'restart nginx'
+
+- name: 'flush handlers'
+  meta: flush_handlers
+
+- name: 'auto start nginx'
+  lineinfile:
+    dest: /etc/rc.conf
+    regexp: ^nginx_enable
+    line: 'nginx_enable="YES"'

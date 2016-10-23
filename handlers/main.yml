@@ -1,0 +1,7 @@
+- name: 'restart nginx'
+  service:
+    name: nginx
+    state: restarted
+
+- name: 'start PF'
+  include: start-pf.yml

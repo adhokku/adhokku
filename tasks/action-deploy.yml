@@ -1,0 +1,66 @@
+- name: 'find jails for app'
+  find:
+    file_type: directory
+    paths: /usr/jails
+    patterns: '{{ app_name }}*'
+  register: app_jail_dirs
+
+- name: 'set jail id'
+  set_fact:
+    app_jail_id: '{{ "%05d" % (app_jail_dirs.matched + 1) }}'
+
+- name: 'determine new app jail name and IP address'
+  set_fact:
+    app_uuid: '{{ ansible_date_time.iso8601_micro | to_uuid }}'
+    app_jail_name: '{{ app_name }}-{{ app_jail_id }}'
+    app_jail_address: '10.0.0.{{ (app_jail_id|int) % 256 }}'
+
+
+- name: 'create jail for app'
+  command: ezjail-admin create '{{ app_jail_name }}' 'lo1|{{ app_jail_address }}'
+
+- name: 'start jail for app'
+  command: ezjail-admin start '{{ app_jail_name }}'
+
+- name: 'set jail localhost IP'
+  shell: echo 'echo "{{ app_jail_address }} localhost" > /etc/hosts' | ezjail-admin console '{{ app_jail_name }}'
+
+- name: 'set jail resolv.conf'
+  shell: echo 'echo "nameserver 8.8.8.8" > /etc/resolv.conf' | ezjail-admin console '{{ app_jail_name }}'
+
+
+# Needed to enable NAT for the new jail.
+- name: 'start PF'
+  command: 'true'
+  notify: 'start PF'
+
+- name: 'flush handlers'
+  meta: flush_handlers
+
+
+- name: 'copy Jailfile'
+  copy:
+    src: '{{ app_jailfile }}'
+    dest: /usr/jails/{{ app_jail_name }}/Jailfile
+
+- name: 'run Jailfile'
+  command: ezjail-admin console -e 'sh /Jailfile | tee /var/log/Jailfile.log' '{{ app_jail_name }}'
+
+
+- name: 'copy nginx config for app'
+  template:
+    owner: root
+    group: wheel
+    mode: 0644
+    src: templates/app.conf.j2
+    dest: /usr/local/etc/nginx/sites-enabled/{{ app_name }}.conf
+  notify: 'restart nginx'
+
+# Restart nginx to direct traffic to the new jail before we shut down the previous one.
+- name: 'flush handlers'
+  meta: flush_handlers
+
+
+- name: 'stop previous jails'
+  shell: ezjail-admin stop '{{ item.path | basename }}'
+  with_items: '{{ app_jail_dirs.files }}'

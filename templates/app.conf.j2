@@ -1,0 +1,10 @@
+server {
+    listen  80;
+{% if app_domains | length %}
+    server_name {% for app_domain in app_domains %} {{ app_domain }}{% endfor %};
+{% endif %}
+
+    location / {
+        proxy_pass http://{{ app_jail_address }}:{{ app_port }};
+    }
+}

@@ -1,0 +1,4 @@
+- when: action == 'setup'
+  include: action-setup.yml
+- when: action == 'deploy'
+  include: action-deploy.yml

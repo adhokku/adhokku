@@ -1,0 +1,19 @@
+- name: 'enable PF'
+  lineinfile:
+    dest: /etc/rc.conf
+    regexp: ^pf_enable
+    line: 'pf_enable="YES"'
+
+- name: "specify PF rules file"
+  lineinfile:
+    dest: /etc/rc.conf
+    regexp: ^pf_rules
+    line: 'pf_rules="/etc/pf.conf"'
+
+- name: 'generate PF config'
+  template:
+    owner: root
+    group: wheel
+    mode: 0644
+    src: templates/pf.conf.j2
+    dest: /etc/pf.conf

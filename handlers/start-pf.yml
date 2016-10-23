@@ -1,0 +1,6 @@
+- name: 'ensure PF is started'
+  service:
+    name: pf
+    state: started
+- name: 'reload PF config'
+  command: pfctl -f /etc/pf.conf
