@@ -1,31 +1,30 @@
-- name: 'find jails for app'
+- name: 'Find existing jails for {{ app_name }}'
   find:
     file_type: directory
     paths: /usr/jails
     patterns: '{{ app_name }}*'
   register: app_jail_dirs
 
-- name: 'set jail id'
+- name: 'Generate id for new {{ app_name }} jail'
   set_fact:
     app_jail_id: '{{ "%05d" % (app_jail_dirs.matched + 1) }}'
 
-- name: 'determine new app jail name and IP address'
+- name: 'Generate name and IP address for new {{ app_name }} jail'
   set_fact:
-    app_uuid: '{{ ansible_date_time.iso8601_micro | to_uuid }}'
     app_jail_name: '{{ app_name }}-{{ app_jail_id }}'
     app_jail_address: '10.0.0.{{ (app_jail_id|int) % 256 }}'
 
 
-- name: 'create jail for app'
+- name: 'Create new {{ app_name }} jail'
   command: ezjail-admin create '{{ app_jail_name }}' 'lo1|{{ app_jail_address }}'
 
-- name: 'start jail for app'
+- name: 'Start new {{ app_name }} jail'
   command: ezjail-admin start '{{ app_jail_name }}'
 
-- name: 'set jail localhost IP'
+- name: 'Write /etc/hosts for new {{ app_name }} jail'
   shell: echo 'echo "{{ app_jail_address }} localhost" > /etc/hosts' | ezjail-admin console '{{ app_jail_name }}'
 
-- name: 'set jail resolv.conf'
+- name: 'Write resolv.conf for new {{ app_name }} jail'
   shell: echo 'echo "nameserver 8.8.8.8" > /etc/resolv.conf' | ezjail-admin console '{{ app_jail_name }}'
 
 
@@ -33,16 +32,16 @@
 - include: start-pf.yml
 
 
-- name: 'copy Jailfile'
+- name: 'Copy Jailfile to new {{ app_name }} jail'
   copy:
     src: '{{ app_jailfile }}'
     dest: /usr/jails/{{ app_jail_name }}/Jailfile
 
-- name: 'run Jailfile'
+- name: 'Run Jailfile'
   command: ezjail-admin console -e 'sh /Jailfile | tee /var/log/Jailfile.log' '{{ app_jail_name }}'
 
 
-- name: 'copy nginx config for app'
+- name: 'Write Nginx config for {{ app_name }}'
   template:
     owner: root
     group: wheel
@@ -54,6 +53,6 @@
 - include: restart-nginx.yml
 
 
-- name: 'stop previous jails'
+- name: 'Stop other jails for {{ app_name }}'
   shell: ezjail-admin stop '{{ item.path | basename }}'
   with_items: '{{ app_jail_dirs.files }}'

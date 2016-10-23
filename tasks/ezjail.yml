@@ -1,22 +1,22 @@
-- name: 'install ezjail'
+- name: 'Install ezjail'
   pkgng:
     name: ezjail
     state: present
 
-- name: 'auto start ezjail'
+- name: '(rc.conf) Start ezjail on boot'
   lineinfile:
     dest: /etc/rc.conf
     regexp: ^ezjail_enable
     line: 'ezjail_enable="YES"'
 
 
-- name: 'clone loopback lo1'
+- name: '(rc.conf) Clone loopback interface lo1'
   lineinfile:
     dest: /etc/rc.conf
     regexp: ^cloned_interfaces
     line: 'cloned_interfaces="lo1"'
 
-- name: 'set lo1 IP address and mask'
+- name: '(rc.conf) Set lo1 IP address and mask'
   lineinfile:
     dest: /etc/rc.conf
     regexp: ^ifconfig_lo1
@@ -26,14 +26,14 @@
 - include: pf.yml
 
 
-- name: 'start cloned interfaces'
+- name: 'Start cloned interface'
   command: service netif cloneup
 
-- name: 'check if basejail exists'
+- name: 'Check if base jail exists'
   stat: path=/usr/jails/basejail
   register: basejail_dir
 
-- name: 'create basejail'
+- name: 'Create base jail'
   command: ezjail-admin install
   when: basejail_dir.stat.exists == False
 

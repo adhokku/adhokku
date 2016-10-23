@@ -1,9 +1,9 @@
-- name: 'install nginx'
+- name: 'Install Nginx'
   pkgng:
     name: nginx
     state: present
 
-- name: 'create nginx sites-enabled directory'
+- name: 'Create sites-enabled directory for Nginx'
   file:
     path: /usr/local/etc/nginx/sites-enabled
     owner: root
@@ -11,7 +11,7 @@
     mode: 0755
     state: directory
 
-- name: 'copy nginx config'
+- name: 'Write nginx.conf'
   template:
     owner: root
     group: wheel
@@ -21,10 +21,7 @@
 
 - include: restart-nginx.yml
 
-- name: 'flush handlers'
-  meta: flush_handlers
-
-- name: 'auto start nginx'
+- name: '(rc.conf) Start Nginx on boot'
   lineinfile:
     dest: /etc/rc.conf
     regexp: ^nginx_enable
