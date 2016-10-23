@@ -34,7 +34,7 @@
   register: basejail_dir
 
 - name: 'create basejail'
-  command: ezjail-admin install -p
+  command: ezjail-admin install
   when: basejail_dir.stat.exists == False
 
 # TODO: figure out non-interactive basejail updates
