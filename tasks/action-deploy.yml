@@ -30,12 +30,7 @@
 
 
 # Needed to enable NAT for the new jail.
-- name: 'start PF'
-  command: 'true'
-  notify: 'start PF'
-
-- name: 'flush handlers'
-  meta: flush_handlers
+- include: start-pf.yml
 
 
 - name: 'copy Jailfile'
@@ -54,11 +49,9 @@
     mode: 0644
     src: templates/app.conf.j2
     dest: /usr/local/etc/nginx/sites-enabled/{{ app_name }}.conf
-  notify: 'restart nginx'
 
 # Restart nginx to direct traffic to the new jail before we shut down the previous one.
-- name: 'flush handlers'
-  meta: flush_handlers
+- include: restart-nginx.yml
 
 
 - name: 'stop previous jails'

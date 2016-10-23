@@ -18,7 +18,8 @@
     mode: 0644
     src: templates/nginx.conf.j2
     dest: /usr/local/etc/nginx/nginx.conf
-  notify: 'restart nginx'
+
+- include: restart-nginx.yml
 
 - name: 'flush handlers'
   meta: flush_handlers
