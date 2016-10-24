@@ -1,2 +1,3 @@
 - include: nginx.yml
 - include: ezjail.yml
+- include: set-up-git-deployment.yml

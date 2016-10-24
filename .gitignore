@@ -1,7 +1,6 @@
 /.ssh
 /.vagrant
 /dev.inventory
-/Jailfile
 /log
 /setup.yml
 *.retry

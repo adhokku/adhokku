@@ -11,6 +11,7 @@
 
 - name: 'Generate name and IP address for new {{ app_name }} jail'
   set_fact:
+    app_dir: '/home/{{ deployer_username }}/{{ app_name }}'
     app_jail_name: '{{ app_name }}-{{ app_jail_id }}'
     app_jail_address: '10.0.0.{{ (app_jail_id|int) % 256 }}'
 
@@ -32,13 +33,12 @@
 - include: start-pf.yml
 
 
-- name: 'Copy Jailfile to new {{ app_name }} jail'
-  copy:
-    src: '{{ app_jailfile }}'
-    dest: /usr/jails/{{ app_jail_name }}/Jailfile
+- include: deploy-git.yml
+  when: deploy_via == 'git'
+
 
 - name: 'Run Jailfile'
-  command: ezjail-admin console -e 'sh /Jailfile | tee /var/log/Jailfile.log' '{{ app_jail_name }}'
+  command: ezjail-admin console -e 'sh /app/Jailfile' '{{ app_jail_name }}'
 
 
 - name: 'Write Nginx config for {{ app_name }}'

@@ -1,3 +1,5 @@
 ansible_python_interpreter: /usr/local/bin/python
 app_port: 5000
+deploy_via: git
+deployer_username: deployer
 worker_processes: 3
