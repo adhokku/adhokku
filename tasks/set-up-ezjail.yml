@@ -23,7 +23,7 @@
     line: 'ifconfig_lo1="inet 10.0.0.1 netmask 255.255.255.0"'
 
 
-- include: pf.yml
+- include: set-up-pf.yml
 
 
 - name: 'Start cloned interface'
