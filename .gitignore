@@ -1,4 +1,5 @@
 /.ssh
+/.vagrant
 /dev.inventory
 /Jailfile
 /log
