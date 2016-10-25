@@ -1,0 +1,65 @@
+#! /bin/sh
+
+init() {
+    if [ -z "$ADHOKKU_PATH" ]; then
+        echo "Error: ADHOKKU_PATH isn't set"
+        exit 1
+    fi
+    cat > ansible.cfg <<END
+[defaults]
+roles_path = /home/dbohdan/Private/Dropbox/projects/2016/adhokku-project/
+END
+    cat > inventory <<END
+[adhokku]
+vagrant ansible_host=127.0.0.1 ansible_port=2222
+END
+    touch Jailfile
+
+    mkdir -p playbooks/vars
+    cat > playbooks/deploy.yml <<END
+- hosts: adhokku
+  remote_user: $USER
+  become: yes
+  vars_files:
+    - vars/main.yml
+  roles:
+    - role: 'adhokku.adhokku'
+      action: 'deploy'
+END
+    cat > playbooks/setup.yml <<END
+- hosts: adhokku
+  remote_user: '$USER'
+  become: yes
+  vars_files:
+    - vars/main.yml
+  roles:
+    - role: 'adhokku.adhokku'
+      action: 'setup'
+END
+    cat > playbooks/vars/main.yml <<END
+- app_name: '$(basename $(pwd))'
+- app_domains: ['127.0.0.1']
+END
+}
+
+usage() {
+    echo "Usage: $(basename $(readlink -f $0)) init|help"
+}
+
+main() {
+    case "$1" in
+        init)
+            init
+            ;;
+        help)
+            usage
+            exit 0
+            ;;
+        *)
+            usage
+            exit 1
+            ;;
+    esac
+}
+
+main $@
