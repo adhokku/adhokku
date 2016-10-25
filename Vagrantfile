@@ -22,6 +22,6 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision :shell do |s|
     ssh_pub_key = File.readlines("#{Dir.home}/.ssh/id_rsa.pub").first.strip
     s.env = {"PUBLIC_KEY" => ssh_pub_key, "REMOTE_USER" => Etc.getlogin}
-    s.path = "bootstrap-vagrant.sh"
+    s.path = File.join(ENV['ADHOKKU_PATH'], "bootstrap-vagrant.sh")
   end
 end
