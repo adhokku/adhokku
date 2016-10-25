@@ -1,6 +1,11 @@
 - name: 'Archive current repository for {{ app_name }}'
   become: false
-  shell: git archive master -o {{ app_name }}.tar.gz
+  shell: >
+    cd ..;
+    ( git ls-files; git submodule foreach --recursive --quiet
+    'git ls-files --with-tree="$sha1" | sed "s#^#$path/#"' )
+    | while read line; do if [ ! -d "$line" ]; then echo "$line"; fi; done
+    | xargs tar cfz '{{ app_name }}.tar.gz'
   delegate_to: 127.0.0.1
 
 - name: 'Create /app in new {{ app_name }} jail'
@@ -10,9 +15,9 @@
 
 - name: 'Copy repo archive to new {{ app_name }} jail'
   copy:
-    src: '{{ app_name }}.tar.gz'
+    src: '../{{ app_name }}.tar.gz'
     dest: '/usr/jails/{{ app_jail_name }}/app.tar.gz'
 
 # Can't use unarchive in Ansible 2.1.2.0 due to what looks like a bug.
 - name: 'Extract repo archive in new {{ app_name }} jail'
-  shell: 'cd /usr/jails/{{ app_jail_name }}/app && tar xf ../app.tar.gz && rm ../app.tar.gz'
+  shell: 'cd /usr/jails/{{ app_jail_name }}/app && tar xvf ../app.tar.gz && rm ../app.tar.gz'
