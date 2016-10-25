@@ -7,7 +7,12 @@
 
 - name: 'Generate id for new {{ app_name }} jail'
   set_fact:
-    app_jail_id: '{{ "%05d" % (app_jail_dirs.matched + 1) }}'
+    app_jail_id: >-
+      {{ "%05d" %
+      (((app_jail_dirs.files
+      | map(attribute='path') | sort | last | default('-0')).split('-')
+      | last | int) + 1)
+      }}
 
 - name: 'Generate name and IP address for new {{ app_name }} jail'
   set_fact:
