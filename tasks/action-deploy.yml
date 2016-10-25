@@ -16,7 +16,6 @@
 
 - name: 'Generate name and IP address for new {{ app_name }} jail'
   set_fact:
-    app_dir: '/home/{{ deployer_username }}/{{ app_name }}'
     app_jail_name: '{{ app_name }}-{{ app_jail_id }}'
     app_jail_address: '10.0.0.{{ (app_jail_id|int) % 256 }}'
 
