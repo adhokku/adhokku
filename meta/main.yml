@@ -1,0 +1,14 @@
+galaxy_info:
+  author: dbohdan
+  description: A toy single-host PaaS powered by FreeBSD jails
+  license: 2-clause BSD
+  min_ansible_version: 2.1
+  platforms:
+    - name: FreeBSD
+      versions:
+        - 11.0
+  galaxy_tags:
+    - freebsd
+    - jails
+    - paas
+dependencies: []
