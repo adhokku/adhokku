@@ -5,10 +5,7 @@ init() {
         echo "Error: ADHOKKU_PATH isn't set"
         exit 1
     fi
-    cat > ansible.cfg <<END
-[defaults]
-roles_path = /home/dbohdan/Private/Dropbox/projects/2016/adhokku-project/
-END
+
     cat > inventory <<END
 [adhokku]
 vagrant ansible_host=127.0.0.1 ansible_port=2222
