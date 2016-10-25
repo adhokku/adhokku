@@ -14,11 +14,28 @@
       | last | int) + 1)
       }}
 
+
+- name: 'Read the counter file'
+  command: 'cat /var/adhokku/counter'
+  register: counter_read
+
+- name: 'Set the counter variable'
+  set_fact:
+    counter: '{{ (counter_read.stdout | int) + 10 }}'
+
+
 - name: 'Generate name and IP address for new {{ app_name }} jail'
   set_fact:
     app_jail_name: '{{ app_name }}-{{ app_jail_id }}'
-    app_jail_address: '10.0.0.{{ (app_jail_id|int) % 256 }}'
+    app_jail_address: >-
+      10.{{ ((counter | int) // 65536) % 256
+      }}.{{ ((counter | int) //   256) % 256
+      }}.{{  (counter | int)           % 256 }}
 
+- name: 'Write incremented counter to counter file'
+  copy:
+    content: "{{ (counter_read.stdout | int) + 1 }}\n"
+    dest: /var/adhokku/counter
 
 - name: 'Create new {{ app_name }} jail'
   command: ezjail-admin create '{{ app_jail_name }}' 'lo1|{{ app_jail_address }}'

@@ -1,3 +1,4 @@
 - include: set-up-nginx.yml
 - include: set-up-ezjail.yml
 - include: set-up-git-deployment.yml
+- include: set-up-counter.yml

@@ -1,0 +1,18 @@
+- name: 'Create /var/adhokku'
+  file:
+    dest: /var/adhokku/
+    state: directory
+    mode: 0775
+    owner: root
+    group: wheel
+
+- name: 'Check if counter file exists'
+  stat:
+    path: /var/adhokku/counter
+  register: counter_file
+
+- name: 'Create counter file'
+  copy:
+    content: "0\n"
+    dest: /var/adhokku/counter
+  when: counter_file.stat.exists == False
