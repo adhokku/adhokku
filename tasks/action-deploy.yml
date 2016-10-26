@@ -59,7 +59,7 @@
 
 
 - name: 'Run Jailfile'
-  command: ezjail-admin console -e 'sh /app/Jailfile' '{{ app_jail_name }}'
+  shell: echo 'sh -c "PORT={{ app_port }} . /app/Jailfile"' | ezjail-admin console '{{ app_jail_name }}'
 
 
 - name: 'Write Nginx config for {{ app_name }}'
