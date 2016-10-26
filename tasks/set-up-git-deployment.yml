@@ -9,7 +9,8 @@
     name: '{{ deployer_username }}'
     state: present
 
-- name: "Authorize current SSH user's key for remote user {{ deployer_username }}"
+- name: >-
+    Authorize current SSH user's key for remote user {{ deployer_username }}
   authorized_key:
     key: "{{ lookup('file', lookup('env', 'HOME') + '/.ssh/id_rsa.pub') }}"
     state: present

@@ -20,4 +20,7 @@
 
 # Can't use unarchive in Ansible 2.1.2.0 due to what looks like a bug.
 - name: 'Extract repo archive in new {{ app_name }} jail'
-  shell: 'cd /usr/jails/{{ app_jail_name }}/app && tar xvf ../app.tar.gz && rm ../app.tar.gz'
+  shell: >-
+    cd /usr/jails/{{ app_jail_name }}/app
+    && tar xvf ../app.tar.gz
+    && rm ../app.tar.gz

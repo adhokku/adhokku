@@ -34,16 +34,21 @@
     dest: /var/adhokku/counter
 
 - name: 'Create new {{ app_name }} jail'
-  command: ezjail-admin create '{{ app_jail_name }}' 'lo1|{{ app_jail_address }}'
+  command: >-
+    ezjail-admin create '{{ app_jail_name }}' 'lo1|{{ app_jail_address }}'
 
 - name: 'Start new {{ app_name }} jail'
   command: ezjail-admin start '{{ app_jail_name }}'
 
 - name: 'Write /etc/hosts for new {{ app_name }} jail'
-  shell: echo 'echo "{{ app_jail_address }} localhost" > /etc/hosts' | ezjail-admin console '{{ app_jail_name }}'
+  copy:
+    content: '{{ app_jail_address }} localhost'
+    dest: '/usr/jails/{{ app_jail_name }}/etc/hosts'
 
 - name: 'Write resolv.conf for new {{ app_name }} jail'
-  shell: echo 'echo "nameserver 8.8.8.8" > /etc/resolv.conf' | ezjail-admin console '{{ app_jail_name }}'
+  copy:
+    content: "nameserver 8.8.8.8\nnameserver 8.8.4.4"
+    dest: '/usr/jails/{{ app_jail_name }}/etc/resolv.conf'
 
 
 # Needed to enable NAT for the new jail.
@@ -55,7 +60,9 @@
 
 
 - name: 'Run Jailfile'
-  shell: echo 'sh -c "PORT={{ app_port }} . /app/Jailfile"' | ezjail-admin console '{{ app_jail_name }}'
+  shell: >-
+    echo 'sh -c "PORT={{ app_port }} . /app/Jailfile"'
+    | ezjail-admin console '{{ app_jail_name }}'
 
 
 - name: 'Write Nginx config for {{ app_name }}'
@@ -66,7 +73,8 @@
     src: templates/app.conf.j2
     dest: /usr/local/etc/nginx/sites-enabled/{{ app_name }}.conf
 
-# Reload Nginx configuration to direct traffic to the new jail before we shut down the previous one.
+# Reload Nginx configuration to direct traffic to the new jail before we shut
+# down the previous one.
 - include: reconfigure-nginx.yml
 
 
