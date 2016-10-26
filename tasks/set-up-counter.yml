@@ -15,4 +15,7 @@
   copy:
     content: "0\n"
     dest: /var/adhokku/counter
+    mode: 0644
+    owner: root
+    group: wheel
   when: counter_file.stat.exists == False
