@@ -1,4 +1,9 @@
-- name: 'Restart Nginx'
+- name: 'Start Nginx'
   service:
     name: nginx
-    state: restarted
+    state: started
+
+- name: 'Reload Nginx config'
+  service:
+    name: nginx
+    state: reloaded
