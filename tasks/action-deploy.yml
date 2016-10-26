@@ -70,8 +70,8 @@
     src: templates/app.conf.j2
     dest: /usr/local/etc/nginx/sites-enabled/{{ app_name }}.conf
 
-# Restart nginx to direct traffic to the new jail before we shut down the previous one.
-- include: restart-nginx.yml
+# Reload Nginx configuration to direct traffic to the new jail before we shut down the previous one.
+- include: reconfigure-nginx.yml
 
 
 - name: 'Stop other jails for {{ app_name }}'

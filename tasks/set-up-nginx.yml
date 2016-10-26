@@ -19,7 +19,7 @@
     src: templates/nginx.conf.j2
     dest: /usr/local/etc/nginx/nginx.conf
 
-- include: restart-nginx.yml
+- include: reconfigure-nginx.yml
 
 - name: '(rc.conf) Start Nginx on boot'
   lineinfile:
