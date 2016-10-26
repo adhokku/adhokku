@@ -75,3 +75,8 @@
     ezjail-admin stop '{{ item | basename }}'
     && ezjail-admin config -r norun '{{ item | basename }}'
   with_items: '{{ app_jail_dirs.stdout_lines }}'
+
+- name: 'Delete other jails for {{ app_name }}'
+  shell: ezjail-admin delete -w '{{ item | basename }}'
+  with_items: '{{ app_jail_dirs.stdout_lines }}'
+  when: delete_old_jails == True
