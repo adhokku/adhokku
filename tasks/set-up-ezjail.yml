@@ -30,7 +30,8 @@
   command: service netif cloneup
 
 - name: 'Check if base jail exists'
-  stat: path=/usr/jails/basejail
+  stat:
+    path: /usr/jails/basejail
   register: basejail_dir
 
 - name: 'Create base jail'
