@@ -1,16 +1,12 @@
 - name: 'Find existing jails for {{ app_name }}'
-  find:
-    file_type: directory
-    paths: /usr/jails
-    patterns: '{{ app_name }}*'
+  shell: ezjail-admin list | awk '/{{ app_name }}/ { print $4 }'
   register: app_jail_dirs
 
 - name: 'Generate id for new {{ app_name }} jail'
   set_fact:
     app_jail_id: >-
       {{ "%05d" %
-      (((app_jail_dirs.files
-      | map(attribute='path') | sort | last | default('-0')).split('-')
+      (((app_jail_dirs.stdout_lines | sort | last | default('-0')).split('-')
       | last | int) + 1)
       }}
 
@@ -75,5 +71,7 @@
 
 
 - name: 'Stop other jails for {{ app_name }}'
-  shell: ezjail-admin stop '{{ item.path | basename }}'
-  with_items: '{{ app_jail_dirs.files }}'
+  shell: >-
+    ezjail-admin stop '{{ item | basename }}'
+    && ezjail-admin config -r norun '{{ item | basename }}'
+  with_items: '{{ app_jail_dirs.stdout_lines }}'
