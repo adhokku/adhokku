@@ -1,5 +1,6 @@
 ansible_python_interpreter: /usr/local/bin/python
 app_port: 5000
+app_mount: []
 delete_old_jails: true
 deploy_via: git
 deployer_username: deployer

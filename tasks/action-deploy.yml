@@ -51,6 +51,18 @@
     dest: '/usr/jails/{{ app_jail_name }}/etc/resolv.conf'
 
 
+- name: 'Mount host directories in new {{ app_name }} jail'
+  mount:
+    name: >-
+      /usr/jails/{{ app_jail_name }}/{{ item.dest | regex_replace('^/', '') }}
+    src: '{{ item.src }}'
+    fstab: '/etc/fstab.{{ app_jail_name | replace("-", "_") }}'
+    fstype: nullfs
+    opts: rw
+    state: mounted
+  with_items: '{{ app_mount }}'
+
+
 # Needed to enable NAT for the new jail.
 - include: start-pf.yml
 
@@ -82,6 +94,13 @@
   shell: >-
     ezjail-admin stop '{{ item | basename }}'
     && ezjail-admin config -r norun '{{ item | basename }}'
+  with_items: '{{ app_jail_dirs.stdout_lines }}'
+
+- name: 'Unmount host directories in other jails for {{ app_name }}'
+  shell: >-
+    mount
+    | awk '! /basejail/ && /nullfs/ && /{{ item | basename }}/ { print $3 }'
+    | xargs umount
   with_items: '{{ app_jail_dirs.stdout_lines }}'
 
 - name: 'Delete other jails for {{ app_name }}'
