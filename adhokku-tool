@@ -35,7 +35,10 @@ END
 END
     cat > playbooks/vars/main.yml <<END
 - app_name: '$(basename $(pwd))'
-- app_domains: ['127.0.0.1']
+- app_domains:
+    - host: '127.0.0.1'
+      port: 80
+      protocol: http
 END
 }
 
