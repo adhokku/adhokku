@@ -4,13 +4,13 @@ A toy single-host PaaS powered by FreeBSD jails and managed with Ansible.
 
 # How it works
 
-When you deploy an application using Adhokku, Adhokku creates a new [jail](https://en.wikipedia.org/wiki/FreeBSD_jail) on the remote host and provisions it from a fixed clean state using the instructions in the `Jailfile` in your Git repository. (A `Jailfile` is a simple POSIX shell script; [here is one](https://github.com/adhokku/adhokku-caddy/blob/master/Jailfile).) All jails sit behind a reverse proxy that directs traffic to one of them based on the domain name or the IP address in the HTTP request. When a new jail has been provisioned for an application, Adhokku seemlessly reconfigures the reverse proxy to send traffic to it instead of the one currently active for that application.
+When you deploy an application using Adhokku, Adhokku creates a new [jail](https://en.wikipedia.org/wiki/FreeBSD_jail) on the remote host and provisions it from a fixed clean state using the instructions in the `Jailfile` in your Git repository. (A `Jailfile` is a simple POSIX shell script; [here is one](https://github.com/adhokku/adhokku-caddy/blob/master/Jailfile).) All jails sit behind a reverse proxy that directs traffic to one of them based on the host's domain name or IP address in the HTTP request. When a new jail has been provisioned for an application, Adhokku seemlessly reconfigures the reverse proxy to send traffic to it instead of the one currently active for that application.
 
 Adhokku is built as an [Ansible](https://www.ansible.com/) role, so it operates over SSH and requires no specialized daemons running on the remote host for setup or deployment. 
 
 # Requirements
 
-Ansible 2.0 or later and Git installed on the developer machine. FreeBSD 10.3 or 11.0, -RELEASE or -STABLE, on the server (other versions may work but haven't been tested).
+Ansible 2.0 or later and Git installed on the developer machine. FreeBSD 10.3 or 11.0, -RELEASE or -STABLE, on the server (other versions may work but haven't been tested). An SSH key pair.
 
 # Setup
 
