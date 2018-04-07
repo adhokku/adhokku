@@ -5,7 +5,7 @@ pw user add "$REMOTE_USER" -m
 echo "--- Adding user $REMOTE_USER to sudoers"
 echo -e "\n$REMOTE_USER ALL=(ALL) NOPASSWD: ALL" >> /usr/local/etc/sudoers
 
-echo "--- Copying public key $(echo $PUBLIC_KEY | awk '{ print $3 }') for $REMOTE_USER"
+echo "--- Copying public key $(echo "$PUBLIC_KEY" | awk '{ print $3 }') for $REMOTE_USER"
 mkdir -p "/home/$REMOTE_USER/.ssh"
 echo "$PUBLIC_KEY" > "/home/$REMOTE_USER/.ssh/authorized_keys"
 chown -R "$REMOTE_USER:$REMOTE_USER" "/home/$REMOTE_USER/.ssh"

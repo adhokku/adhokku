@@ -15,7 +15,7 @@ END
     mkdir -p playbooks/vars
     cat > playbooks/deploy.yml <<END
 - hosts: adhokku
-  remote_user: $USER
+  remote_user: '$USER'
   become: yes
   vars_files:
     - vars/main.yml
@@ -34,7 +34,7 @@ END
       action: 'setup'
 END
     cat > playbooks/vars/main.yml <<END
-- app_name: '$(basename $(pwd))'
+- app_name: '$(basename "$(pwd)")'
 - app_domains:
     - host: '127.0.0.1'
       port: 80
@@ -43,7 +43,7 @@ END
 }
 
 usage() {
-    echo "Usage: $(basename $(readlink -f $0)) init|help"
+    echo "Usage: $(basename "$(readlink -f "$0")") init|help"
 }
 
 main() {
@@ -62,4 +62,4 @@ main() {
     esac
 }
 
-main $@
+main "$@"
