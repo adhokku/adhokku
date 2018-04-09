@@ -1,7 +1,7 @@
 server {
     listen  80;
 {% if app_domains | length %}
-    server_name {% for app_domain in app_domains %} {{ app_domain }}{% endfor %};
+    server_name {% for app_domain in app_domains %} {{ app_domain.host }}{% endfor %};
 {% endif %}
 
     location / {
