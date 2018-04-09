@@ -1,7 +1,7 @@
 - name: 'Archive current repository for {{ app_name }}'
   become: false
   shell: >
-    cd ..;
+    cd "$(git rev-parse --show-toplevel)";
     ( git ls-files; git submodule foreach --recursive --quiet
     'git ls-files --with-tree="$sha1" | sed "s#^#$path/#"' )
     | while read line; do if [ ! -d "$line" ]; then echo "$line"; fi; done
