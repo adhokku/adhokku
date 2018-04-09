@@ -9,7 +9,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.ssh.shell = "sh"
 
   config.vm.define "adhokku" do |adhokku|
-    adhokku.vm.box = "freebsd/FreeBSD-11.0-STABLE"
+    adhokku.vm.box = "freebsd/FreeBSD-11.1-STABLE"
     adhokku.vm.guest = :freebsd
     adhokku.vm.network "forwarded_port", guest: 80, host: 8080
     adhokku.vm.synced_folder ".", "/vagrant", disabled: true

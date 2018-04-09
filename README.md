@@ -10,7 +10,7 @@ Adhokku is built as an [Ansible](https://www.ansible.com/) role, so it operates 
 
 # Requirements
 
-Ansible 2.0 or later and Git installed on the developer machine. FreeBSD 10.3 or 11.0, -RELEASE or -STABLE, on the server (other versions may work but haven't been tested). An SSH key pair.
+Ansible 2.0 or later and Git installed on the developer machine. FreeBSD 10.4 or 11.1, -RELEASE or -STABLE, on the server (other versions may work but haven't been tested). An SSH key pair.
 
 # Setup
 
@@ -86,7 +86,7 @@ ansible-playbook -i inventory playbooks/deploy.yml
 
 * [Dokku](https://github.com/dokku/dokku) — The primary inspiration for this project. Dokku is a single-host open source PaaS for Linux powered by Docker.
 * [ansible-elixir-stack](https://github.com/HashNuke/ansible-elixir-stack/) — The *other primary* inspiration. An Ansible role for running Elixir applications on Ubuntu. It gets the credit for the role action pattern and the idea behind `adhokku-tool`.
-* [FreeBSD & LFE Images: Docker-like functionality with ezjail](http://blog.lfe.io/tutorials/2015/07/08/1416-freebsd--lfe-images-docker-like-functionality-with-ezjail/)
+* [FreeBSD & LFE Images: Docker-like functionality with ezjail](http://blog.lfe.io/tutorials/2015/07/08/1416-freebsd--lfe-images-docker-like-functionality-with-ezjail/).
 
 # License
 
