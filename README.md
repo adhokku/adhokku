@@ -25,7 +25,7 @@ Note that Adhokku expects a clean FreeBSD installation that isn't used for anyth
 ```shell
 export ANSIBLE_ROLES_PATH="$HOME/.ansible/roles"
 ansible-galaxy install adhokku.adhokku
-export ADHOKKU_PATH="$HOME/.ansible/roles/adhokku.adhokku/"
+export ADHOKKU_PATH="$ANSIBLE_ROLES_PATH/adhokku.adhokku"
 ```
 
 2\. Create a new project, e.g., in `~/projects/adhokku-hello/`.
